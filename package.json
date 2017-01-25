@@ -14,6 +14,7 @@
     "express": "*",
     "socket.io": "*",
     "socketio-file-upload": "^0.4.4",
-    "evilscan": "0.0.9"
+    "evilscan": "0.0.9",
+    "mysql": ""
   }
 }
