@@ -1,7 +1,9 @@
 var express = require("express");
 var mysql = require('mysql');
 var app = express();
-app.use(express.logger());
+//app.use(express.logger());
+
+var server = require("http").createServer(app);
 
 var db_config = {
     host: 'us-cdbr-iron-east-04.cleardb.net',
@@ -45,8 +47,8 @@ app.get('/', function(request, response) {
         response.send(['Hello World!!!! HOLA MUNDO!!!!', rows]);
     });
 });
-
-var port = process.env.PORT || 5000;
+/*var port = process.env.PORT || 5000;
 app.listen(port, function() {
     console.log("Listening on " + port);
-});
+});*/
+server.listen(process.env.PORT || 3000);
