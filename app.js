@@ -8,31 +8,40 @@ server.listen(process.env.PORT || 3000);
 var arrUsers = [];
 
 app.get("/", function(req, res){
-	res.sendFile(__dirname + "/index.html");	
+  res.sendFile(__dirname + "/index.html");  
 });
 
 io.sockets.on('connection', function (socket) {
   //console.log("Co nguoi connect ne - " + getDateTime());
   socket.on('register_user', function (_userName, _email) {
     var user = new User(_userName, _email);
-    if (arrUsers.indexOf(user)) {
+
+    var found = false;
+    for(var i = 0; i < arrUsers.length; i++) {
+        if (arrUsers[i].userName == _userName) {
+            found = true;
+            break;
+        }
+    }
+
+    if (!found) {
       arrUsers.push(user);
       socket.un = _userName;
       socket.emit('response_register', {retCode: 0, errorMsg:"SUCCESS", result:arrUsers});
     }else{
-      socket.emit('response_register', {retCode: 1, errorMsg:"USER_ALREADY_EXITS", result: "USER_ALREADY_EXITS"});
+      socket.emit('response_register', {retCode: 1, errorMsg:"USER_ALREADY_EXITS", result: []});
     }
-  	//io.sockets.emit('response_register', { noidung: data+" dang nhap ne" });
+    //io.sockets.emit('response_register', { noidung: data+" dang nhap ne" });
   });
   
   //io.sockets.emit('serverguitinnhan', { noidung: "okbaby" });
   
   /*socket.on('servernhantinnhan', function (data) {
-	// emit toi tat ca moi nguoi
-	io.sockets.emit('serverguitinnhan', { noidung: data });
-	
-	// emit tới máy nguoi vừa gửi
-	socket.emit('serverguitinnhan', { noidung: data });
+  // emit toi tat ca moi nguoi
+  io.sockets.emit('serverguitinnhan', { noidung: data });
+  
+  // emit tới máy nguoi vừa gửi
+  socket.emit('serverguitinnhan', { noidung: data });
   });
   */
   
@@ -64,4 +73,14 @@ function getDateTime() {
 
     return year + ":" + month + ":" + day + ":" + hour + ":" + min + ":" + sec;
 
+}
+function containsObject(obj, list) {
+    var i;
+    for (i = 0; i < list.length; i++) {
+        if (list[i] == obj) {
+            return true;
+        }
+    }
+
+    return false;
 }
